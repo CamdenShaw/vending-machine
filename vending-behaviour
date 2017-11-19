@@ -1,0 +1,13 @@
+Story: Jimmy wants a snack
+
+Narrative:  Jimmy likes to snack between lunch and supper but doesn't have time to run out to the cafe across the street.  Nevertheless, he takes it and often returns from his afternoon break late, as the cafe staff are slow.  What Jimmy really needs is some sort of confection machine that vends out sweets to keep him running through the last stretch of the day.
+
+As a manager, I want to keep my staff as close to the office as possible so they don't spend a large portion of their day waiting in line at someone else's establishement.  By installing a vending machine in the office and making sure I stock it with my employees favourite snacks, I can make sure that they stick close to the office and have no excuse to wonder off when they should be working.
+
+Scenario 1: When Jimmy craves a snack.
+        Then he goes into the hall where the vending machine is.
+        Then he looks at the machines inventory to pick what he wants and the price.
+        Given that he has enough the right amount of money
+            He puts his money in the machine and punches in his selection
+        Then the machine delivers his selection and makes a digital note of what has been from its inventory.
+        
