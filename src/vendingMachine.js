@@ -25,22 +25,35 @@ class VendingMachine {
     
     printInventory(){
         let inventoryCount = {}
-        Object.keys(this.data).forEach((item) => {
-            inventoryCount[item] = this.data[item].stock
+        Object.keys(this.data.items).forEach(item => {
+            inventoryCount[item] = this.data.items[item].stock
         })
         return inventoryCount
     }
     
     refillInventory(){
-
+        let restockItems = {}
+        Object.keys(this.data.items).forEach(item => {
+            restockItems[item] = this.data.items[item].desiredStock - this.data.items[item].stock 
+        })
+        return restockItems
     }
 
     restockChange() {
-
+        let restockChange = {}
+        Object.keys(this.data.coins).forEach(coin => {
+            restockChange[coin] = this.data.coins[coin].desired - this.data.coins[coin].current
+        })
+        return restockChange
     }
 
-    giveTreat() {
-
+    giveTreat(money, code) {
+        const snack = Object.keys(this.data.items).filter(item => {
+            return this.data.items[item].callCode == code
+        })
+        if(typeof snack[0] !== "string") throw new Error("No such snack exists.")
+        if(money < this.data.items[snack[0]].price) throw new Error("No money, no snack!")
+        else return snack[0]
     }
 
     changeToReturn() {

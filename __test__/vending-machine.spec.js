@@ -7,11 +7,20 @@ describe("A virtual machine that dispenses treats", () => {
         test = {}
         test.itemName = "Coffee Crisp"
         test.inventory = {
-            [test.itemName]: {
-                price: 1.50,
-                stock: 4,
-                desiredStock: 10,
-                callCode: 'C5'
+            items: {
+                [test.itemName]: {
+                    price: 1.50,
+                    stock: 4,
+                    desiredStock: 10,
+                    callCode: 'C5'
+                }
+            },
+            coins: {
+                nickels: {desired: 200, current: 110},
+                dimes: {desired: 200, current: 90},
+                quarters: {desired: 500, current: 10},
+                loonies: {desired: 300, current: 203},
+                toonies: {desired: 300, current: 109}
             }
         }
         test.vendingMachine = new vendingMachine(test.inventory)
@@ -38,6 +47,34 @@ describe("A virtual machine that dispenses treats", () => {
     describe("When an inventory count is requested", () => {
         it("Should return the stock count of all items in the machine", () => {
             expect(test.vendingMachine.printInventory()).toEqual({"Coffee Crisp": 4})
+        })
+    })
+    describe("When a restock quote is requested", () => {
+        it("Should return the value of the desired stock minus the current stock", () => {
+            expect(test.vendingMachine.refillInventory()).toEqual({"Coffee Crisp": 6})
+        })
+    })
+    describe("When a restock change quote is requested", () => {
+        it("Should return the needed coin count to restock the vending machine's change", () => {
+            expect(test.vendingMachine.restockChange()).toEqual({
+                                                                    nickels: 90,
+                                                                    dimes: 110,
+                                                                    quarters: 490,
+                                                                    loonies: 97,
+                                                                    toonies: 191
+                                                                })
+        })
+    })
+    describe("When a call code is entered", () => {
+        describe("When money is sufficient and code is valid", () => {
+            it("Should return the selected snack", () => {
+                expect(test.vendingMachine.giveTreat(1.50, "C5")).toEqual("Coffee Crisp")
+            })
+        })
+        describe("When money is insufficient and code is valid", () => {
+            it("Should throw an error", () => {
+                expect(() => test.vendingMachine.giveTreat(1.50, "C6")).toThrow()
+            })
         })
     })
 })
