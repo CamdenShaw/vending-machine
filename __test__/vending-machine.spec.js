@@ -73,7 +73,37 @@ describe("A virtual machine that dispenses treats", () => {
         })
         describe("When money is insufficient and code is valid", () => {
             it("Should throw an error", () => {
-                expect(() => test.vendingMachine.giveTreat(1.50, "C6")).toThrow()
+                expect(() => test.vendingMachine.giveTreat(1.00, "C5")).toThrow()
+            })
+        })
+        describe("When money is sufficient and code is invalid", () => {
+            expect(() => test.vendingMachine.giveTreat(1.50, "C6")).toThrow()
+        })
+    })
+    describe("When treat is delivered", () => {
+        describe("When money given is more than treat's price", () => {
+            it("Should return change", () => {
+                expect(test.vendingMachine.changeToReturn(2.45, "C5")).toEqual({
+                                                                            value: 0.95,
+                                                                            toonies: 0,
+                                                                            loonies: 0,
+                                                                            quarters: 3,
+                                                                            dimes: 1,
+                                                                            nickels: 1
+                                                                        })
+                expect(test.vendingMachine.changeToReturn(5.00, "C5")).toEqual({
+                                                                            value: 3.50,
+                                                                            toonies: 1, 
+                                                                            loonies: 1,
+                                                                            quarters: 2,
+                                                                            dimes: 0,
+                                                                            nickels: 0
+                                                                        })
+            })
+        })
+        describe("When money given is exactly the amount of treat's price", () => {
+            it("Should not return change", () => {
+                expect(test.vendingMachine.changeToReturn(1.50, "C5")).toBe(0)
             })
         })
     })

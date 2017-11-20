@@ -49,15 +49,35 @@ class VendingMachine {
 
     giveTreat(money, code) {
         const snack = Object.keys(this.data.items).filter(item => {
-            return this.data.items[item].callCode == code
+            return this.data.items[item].callCode === code
         })
         if(typeof snack[0] !== "string") throw new Error("No such snack exists.")
         if(money < this.data.items[snack[0]].price) throw new Error("No money, no snack!")
         else return snack[0]
     }
 
-    changeToReturn() {
-
+    changeToReturn(money, code) {
+        const snack = Object.keys(this.data.items).filter(item => {
+            return this.data.items[item].callCode === code
+        })
+        let exactChange = {}
+        if(money >= this.data.items[snack[0]].price) {
+            let change = Math.floor((money - this.data.items[snack[0]].price)*100)/100
+            if(change === 0) return 0
+            exactChange.value = change
+            exactChange.toonies = Math.floor(exactChange.value / 2)
+            change =  change - (exactChange.toonies * 2)
+            exactChange.loonies = Math.floor(change/1)
+            change = change - exactChange.loonies
+            exactChange.quarters = Math.floor(change/0.25)
+            change = change - (exactChange.quarters * 0.25)
+            exactChange.dimes = Math.floor(change/0.1)
+            change = change - (exactChange.dimes * 0.1)
+            exactChange.nickels = Math.floor(change/0.05)
+            console.log(exactChange)
+            return exactChange
+        }
+        else throw new Error("Insufficient funds.")
     }
 }
 
