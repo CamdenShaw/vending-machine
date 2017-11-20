@@ -16,11 +16,31 @@ describe("A virtual machine that dispenses treats", () => {
                 }
             },
             coins: {
-                nickels: {desired: 200, current: 110},
-                dimes: {desired: 200, current: 90},
-                quarters: {desired: 500, current: 10},
-                loonies: {desired: 300, current: 203},
-                toonies: {desired: 300, current: 109}
+                toonies: {
+                    desired: 300, 
+                    current: 109,
+                    value: 2
+                },
+                loonies: {
+                    desired: 300, 
+                    current: 203,
+                    value: 1
+                },
+                quarters: {
+                    desired: 500, 
+                    current: 10,
+                    value: 0.25
+                },
+                dimes: {
+                    desired: 200, 
+                    current: 90,
+                    value: 0.10
+                },
+                nickels: {
+                    desired: 200, 
+                    current: 110, 
+                    value: 0.05
+                }
             }
         }
         test.vendingMachine = new vendingMachine(test.inventory)
@@ -88,8 +108,8 @@ describe("A virtual machine that dispenses treats", () => {
                                                                             toonies: 0,
                                                                             loonies: 0,
                                                                             quarters: 3,
-                                                                            dimes: 1,
-                                                                            nickels: 1
+                                                                            dimes: 2,
+                                                                            nickels: 0
                                                                         })
                 expect(test.vendingMachine.changeToReturn(5.00, "C5")).toEqual({
                                                                             value: 3.50,

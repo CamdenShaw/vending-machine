@@ -65,19 +65,28 @@ class VendingMachine {
             let change = Math.floor((money - this.data.items[snack[0]].price)*100)/100
             if(change === 0) return 0
             exactChange.value = change
-            exactChange.toonies = Math.floor(exactChange.value / 2)
-            change =  change - (exactChange.toonies * 2)
-            exactChange.loonies = Math.floor(change/1)
-            change = change - exactChange.loonies
-            exactChange.quarters = Math.floor(change/0.25)
-            change = change - (exactChange.quarters * 0.25)
-            exactChange.dimes = Math.floor(change/0.1)
-            change = change - (exactChange.dimes * 0.1)
-            exactChange.nickels = Math.floor(change/0.05)
-            console.log(exactChange)
+            Object.keys(this.data.coins).forEach(coin => {
+                let coinValue = this.data.coins[coin].value
+                exactChange[coin] = Math.floor(change / coinValue)
+                let subtract = exactChange[coin] * coinValue
+                change =  Math.ceil((change - subtract)*100)/100
+                if(change === 0) return exactChange
+            })
             return exactChange
         }
         else throw new Error("Insufficient funds.")
+    }
+    bringItAllTogether(code, ...coins){
+        let value = []
+        for(let coin of coins){
+            value.push(coinAnalysis(coin))
+        }
+        money = countMoney(...value)
+        giveTreat(money, code)
+        changeToReturn(money, code)
+        printInventory()
+        refillInventory()
+        restockInventory()
     }
 }
 
