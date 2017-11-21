@@ -83,6 +83,16 @@ describe("A virtual machine that dispenses treats", () => {
                                                                             nickels: 0
                                                                         })
             })
+            describe("When snack name is invalid", () => {
+                it("Should throw an error", () => {
+                    expect(() => test.vendingMachine.giveTreat(2.00, "C4")).toThrow()
+                })
+            })
+            describe("When price is greater than money input", () => {
+                it("Should throw an error", () => {
+                    expect(() => test.vendingMachine.giveTreat(1.00, "C5")).toThrow()
+                })
+            })
         })
         describe("When money given is exactly the amount of treat's price", () => {
             it("Should not return change", () => {
