@@ -1,0 +1,37 @@
+{
+    "items": {
+        "Coffee Crisp": {
+            "price": 1.50,
+            "stock": 4,
+            "desiredStock": 10,
+            "callCode": "C5"
+        }
+    },
+    "coins": {
+        "toonies": {
+            "desired": 300, 
+            "current": 109,
+            "value": 2
+        },
+        "loonies": {
+            "desired": 300, 
+            "current": 203,
+            "value": 1
+        },
+        "quarters": {
+            "desired": 500, 
+            "current": 10,
+            "value": 0.25
+        },
+        "dimes": {
+            "desired": 200, 
+            "current": 90,
+            "value": 0.10
+        },
+        "nickels": {
+            "desired": 200, 
+            "current": 110, 
+            "value": 0.05
+        }
+    }
+}

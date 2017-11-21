@@ -1,51 +1,9 @@
-jest.setMock("../src/inventory", require("../__mocks__/inventory.mock"))
-
 const vendingMachine = require("../src/vendingMachine.js")
+const data = require("../src/inventory")
 
 describe("A virtual machine that dispenses treats", () => {
-    beforeEach(() => {
-        test = {}
-        test.itemName = "Coffee Crisp"
-        test.inventory = {
-            items: {
-                [test.itemName]: {
-                    price: 1.50,
-                    stock: 4,
-                    desiredStock: 10,
-                    callCode: 'C5'
-                }
-            },
-            coins: {
-                toonies: {
-                    desired: 300, 
-                    current: 109,
-                    value: 2
-                },
-                loonies: {
-                    desired: 300, 
-                    current: 203,
-                    value: 1
-                },
-                quarters: {
-                    desired: 500, 
-                    current: 10,
-                    value: 0.25
-                },
-                dimes: {
-                    desired: 200, 
-                    current: 90,
-                    value: 0.10
-                },
-                nickels: {
-                    desired: 200, 
-                    current: 110, 
-                    value: 0.05
-                }
-            }
-        }
-        test.vendingMachine = new vendingMachine(test.inventory)
-    })
-    describe("When money is put into the machine", () => {
+    test.vendingMachine = new vendingMachine(data)
+    describe("Coin Analysis", () => {
         describe("When a coin is inserted", () => {
             it("Should return the value based on weight, diameter and thickness", () => {
                 expect(test.vendingMachine.coinAnalysis(28, 7.3, 1.8)).toBe(2.00)
@@ -54,13 +12,16 @@ describe("A virtual machine that dispenses treats", () => {
                 expect(test.vendingMachine.coinAnalysis(18.03, 1.75, 1.22)).toBe(0.10)
                 expect(test.vendingMachine.coinAnalysis(21.2, 3.95, 1.76)).toBe(0.05)
             })
+            it("Should return 'reject' if coin is invalid", () => {
+                expect(test.vendingMachine.coinAnalysis(1, 1, 1)).toBe("reject")
+            })
         })
         describe("When value of coins has been returned", () => {
             it("Should throw an error if the arguments are not numbers", () => {
                 expect(() => test.vendingMachine.countMoney('4', '5', '6')).toThrow()
             })
             it("Should display the total of money put into the machine", () => {
-                expect(test.vendingMachine.countMoney(4, 5, 6)).toBe(15)
+                expect(test.vendingMachine.countMoney(0.25, 1, 2, 1, 0.25, 0.05, 0.1, 0.1, 0.25)).toBe(5)
             })
         })
     })
@@ -77,11 +38,11 @@ describe("A virtual machine that dispenses treats", () => {
     describe("When a restock change quote is requested", () => {
         it("Should return the needed coin count to restock the vending machine's change", () => {
             expect(test.vendingMachine.restockChange()).toEqual({
-                                                                    nickels: 90,
-                                                                    dimes: 110,
-                                                                    quarters: 490,
-                                                                    loonies: 97,
-                                                                    toonies: 191
+                                                                    nickels: 89,
+                                                                    dimes: 108,
+                                                                    quarters: 487,
+                                                                    loonies: 95,
+                                                                    toonies: 190
                                                                 })
         })
     })
@@ -97,7 +58,9 @@ describe("A virtual machine that dispenses treats", () => {
             })
         })
         describe("When money is sufficient and code is invalid", () => {
-            expect(() => test.vendingMachine.giveTreat(1.50, "C6")).toThrow()
+            it("Should throw an error", () => {
+                expect(() => test.vendingMachine.giveTreat(1.50, "C6")).toThrow()
+            })
         })
     })
     describe("When treat is delivered", () => {

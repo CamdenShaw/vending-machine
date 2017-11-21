@@ -1,8 +1,12 @@
-const inventory = require("./inventory")
+const inventory = require("./inventory.json")
 
 class VendingMachine {
     constructor(data){
-        this.data = inventory(data)
+        this.data = inventory
+        this.state = {
+            ...this.data.items,
+            ...this.data.coins
+        }
     }
 
     coinAnalysis(diameterMM, weightG, thicknessMM) {
@@ -16,11 +20,18 @@ class VendingMachine {
 
     countMoney(...count) {
         let total = 0
+        let changeStock = []
         for(let item of count){
             if(typeof item !== 'number') throw new Error("money is typically counted in numbers")
-            else total += item
+            else { 
+                let coin = Object.keys(this.data.coins).filter(change => {
+                    return this.state[change].value === item
+                })
+                this.state[coin].current += 1
+                total += item
+            }
         }
-        return total
+        return Math.round(total)
     }
     
     printInventory(){
@@ -35,6 +46,7 @@ class VendingMachine {
         let restockItems = {}
         Object.keys(this.data.items).forEach(item => {
             restockItems[item] = this.data.items[item].desiredStock - this.data.items[item].stock 
+            this.state[item].stock += restockItems[item]
         })
         return restockItems
     }
@@ -43,30 +55,35 @@ class VendingMachine {
         let restockChange = {}
         Object.keys(this.data.coins).forEach(coin => {
             restockChange[coin] = this.data.coins[coin].desired - this.data.coins[coin].current
+            this.state[coin].current += restockChange[coin]
         })
         return restockChange
     }
 
     giveTreat(money, code) {
         const snack = Object.keys(this.data.items).filter(item => {
-            return this.data.items[item].callCode === code
+            return this.state[item].callCode === code
         })
         if(typeof snack[0] !== "string") throw new Error("No such snack exists.")
-        if(money < this.data.items[snack[0]].price) throw new Error("No money, no snack!")
-        else return snack[0]
+        if(money < this.state[snack[0]].price) throw new Error("No money, no snack!")
+        else {
+            this.state[snack].stock -= 1
+            return snack[0]
+        }
     }
 
     changeToReturn(money, code) {
         const snack = Object.keys(this.data.items).filter(item => {
-            return this.data.items[item].callCode === code
+            return this.state[item].callCode === code
         })
         let exactChange = {}
         if(money >= this.data.items[snack[0]].price) {
-            let change = Math.floor((money - this.data.items[snack[0]].price)*100)/100
+            let change = Math.floor((money - this.state[snack[0]].price)*100)/100
             if(change === 0) return 0
             exactChange.value = change
             Object.keys(this.data.coins).forEach(coin => {
-                let coinValue = this.data.coins[coin].value
+                this.state[coin].current -= 1
+                let coinValue = this.state[coin].value
                 exactChange[coin] = Math.floor(change / coinValue)
                 let subtract = exactChange[coin] * coinValue
                 change =  Math.ceil((change - subtract)*100)/100
