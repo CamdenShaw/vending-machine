@@ -2,7 +2,7 @@
 
 Red Academy ADP Project 3
 
-![alt text] (./screen-shots/tests-passing.png "Welcome to my Vending Machine")
+![alt text](./screen-shots/tests-passing.png "Welcome to my Vending Machine")
 
 A vending machine app for selecting your favourite snacks... as long as that snack is Coffee Crisp
 
@@ -14,7 +14,7 @@ Feeling hungry?  How about buying a snack from this spectacular vending machine!
 # Learings
 In this project I learned how to build tests for a javascript application.
 
-![alt text] (./screen-shots/tests.png "tests testing testing tests")
+![alt text](./screen-shots/tests.png "tests testing testing tests")
 
 # Contributos
 Camden Shaw
