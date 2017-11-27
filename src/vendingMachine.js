@@ -10,7 +10,6 @@ class VendingMachine {
     }
 
     coinAnalysis(diameterMM, weightG, thicknessMM) {
-        console.log(this.state)
         if((diameterMM > 20.89 && diameterMM < 21.27)&&(weightG > 3.94 && weightG < 4.55)&&(thicknessMM > 1.69 && thicknessMM < 1.77)) return 0.05
         else if ((diameterMM > 18.029 && diameterMM < 18.035)&&(weightG > 1.74 && weightG < 2.34)&&(thicknessMM > 1.16 && thicknessMM < 1.23)) return 0.10
         else if((diameterMM > 23.61 && diameterMM < 23.89)&&(weightG > 4.39 && weightG < 5.84)&&(thicknessMM > 1.57 && thicknessMM < 1.61)) return 0.25
@@ -90,7 +89,6 @@ class VendingMachine {
                 change =  Math.ceil((change - subtract)*100)/100
                 if(change === 0) return exactChange
             })
-            console.log(this.state)
             return exactChange
         }
         else throw new Error("Insufficient funds.")
