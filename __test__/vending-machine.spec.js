@@ -23,6 +23,16 @@ describe("A virtual machine that dispenses treats", () => {
             it("Should display the total of money put into the machine", () => {
                 expect(test.vendingMachine.countMoney(0.25, 1, 2, 1, 0.25, 0.05, 0.1, 0.1, 0.25)).toBe(5)
             })
+            it("Should add to total of coins in the machine", () => {
+                expect( test.vendingMachine.state).toEqual(({
+                    "Coffee Crisp": { price: 1.5, stock: 4, desiredStock: 10, callCode: 'C5' },
+                    toonies: { desired: 300, current: 110, value: 2 },
+                    loonies: { desired: 300, current: 205, value: 1 },
+                    quarters: { desired: 500, current: 13, value: 0.25 },
+                    dimes: { desired: 200, current: 92, value: 0.1 },
+                    nickels: { desired: 200, current: 111, value: 0.05 }
+                }))
+            })
         })
     })
     describe("When an inventory count is requested", () => {
@@ -33,6 +43,9 @@ describe("A virtual machine that dispenses treats", () => {
     describe("When a restock quote is requested", () => {
         it("Should return the value of the desired stock minus the current stock", () => {
             expect(test.vendingMachine.refillInventory()).toEqual({"Coffee Crisp": 6})
+        })
+        it("Should restock the items in the machine", () => {
+            expect(test.vendingMachine.state["Coffee Crisp"]["stock"]).toEqual(10)
         })
     })
     describe("When a restock change quote is requested", () => {
@@ -45,11 +58,31 @@ describe("A virtual machine that dispenses treats", () => {
                                                                     toonies: 190
                                                                 })
         })
+        it("Should restock the change in the machine to preset levels", () => {
+            expect(test.vendingMachine.state).toEqual({
+                "Coffee Crisp": { price: 1.5, stock: 10, desiredStock: 10, callCode: 'C5' },
+                toonies: { desired: 300, current: 300, value: 2 },
+                loonies: { desired: 300, current: 300, value: 1 },
+                quarters: { desired: 500, current: 500, value: 0.25 },
+                dimes: { desired: 200, current: 200, value: 0.1 },
+                nickels: { desired: 200, current: 200, value: 0.05 }
+            })
+        })
     })
     describe("When a call code is entered", () => {
         describe("When money is sufficient and code is valid", () => {
             it("Should return the selected snack", () => {
                 expect(test.vendingMachine.giveTreat(1.50, "C5")).toEqual("Coffee Crisp")
+            })
+            it("Should modify the internal state of selected snack by -1", () => {
+                expect(test.vendingMachine.state).toEqual({
+                    "Coffee Crisp": { price: 1.5, stock: 9, desiredStock: 10, callCode: 'C5' },
+                    toonies: { desired: 300, current: 300, value: 2 },
+                    loonies: { desired: 300, current: 300, value: 1 },
+                    quarters: { desired: 500, current: 500, value: 0.25 },
+                    dimes: { desired: 200, current: 200, value: 0.1 },
+                    nickels: { desired: 200, current: 200, value: 0.05 }
+                })
             })
         })
         describe("When money is insufficient and code is valid", () => {
@@ -82,6 +115,16 @@ describe("A virtual machine that dispenses treats", () => {
                                                                             dimes: 0,
                                                                             nickels: 0
                                                                         })
+            })
+            it("Should take change out of the machine to return desired value", () => {
+                expect(test.vendingMachine.state).toEqual({
+                    "Coffee Crisp": { price: 1.5, stock: 9, desiredStock: 10, callCode: 'C5' },
+                    toonies: { desired: 300, current: 299, value: 2 },
+                    loonies: { desired: 300, current: 299, value: 1 },
+                    quarters: { desired: 500, current: 495, value: 0.25 },
+                    dimes: { desired: 200, current: 198, value: 0.1 },
+                    nickels: { desired: 200, current: 200, value: 0.05 }
+                })
             })
         })
         describe("When snack name is invalid", () => {
